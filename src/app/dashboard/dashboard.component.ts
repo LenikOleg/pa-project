@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { tap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { TodosService } from '../services/todos.service';
 
@@ -23,14 +24,19 @@ export class DashboardComponent implements OnInit {
   }
 
   loadTodos() {
-    this.todosService.getTodos().subscribe(
-      (value) => {
-        this.todos = value;
-      },
-      (error) => {
-        console.log(error);
-        console.log('failted to load todos');
-      }
-    );
+    this.todosService
+      .getTodos()
+      .pipe(
+        tap({
+          next: (value) => {
+            this.todos = value;
+          },
+          error: (error) => {
+            console.log(error);
+            console.log('failted to load todos');
+          },
+        })
+      )
+      .subscribe();
   }
 }

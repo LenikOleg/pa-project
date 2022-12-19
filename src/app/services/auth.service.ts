@@ -1,3 +1,4 @@
+import { registredUsers } from './../shared/registredUsers';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -23,10 +24,11 @@ export class AuthService {
     }
   }
   userLogin(login: any): Observable<boolean> {
-    if (login && login.username && login.password) {
-      const sampleJWT =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3QiLCJzdWIiOjIsImlhdCI6MTYwNDMwOTc0OSwiZXhwIjoxNjA0MzA5ODA5fQ.jHez9kegJ7GT1AO5A2fQp6Dg9A6PBmeiDW1YPaCQoYs';
-
+    if (registredUsers.some((x) => x.userName === login.userName)) {
+      const registredUser = registredUsers.find(
+        (v) => v.userName === login.userName
+      );
+      const sampleJWT = registredUser?.token;
       return of(sampleJWT).pipe(
         map((token) => {
           if (!token) {
